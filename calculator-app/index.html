@@ -8,34 +8,34 @@
   </head>
   <body>
     <main class="app">
-      <section class="calculator" aria-label="Calculator">
-        <div class="display" id="display" aria-live="polite">0</div>
+      <div class="calculator">
+        <div class="display" id="display">0</div>
         <div class="keys">
-          <button class="key key--action" data-action="clear">C</button>
-          <button class="key key--operator" data-action="operator" data-value="/">÷</button>
-          <button class="key key--operator" data-action="operator" data-value="*">×</button>
-          <button class="key key--operator" data-action="operator" data-value="-">−</button>
+          <button data-action="clear" class="span-2 action">C</button>
+          <button data-action="delete" class="action">⌫</button>
+          <button data-action="operator" data-value="/" class="operator">÷</button>
 
-          <button class="key" data-action="digit" data-value="7">7</button>
-          <button class="key" data-action="digit" data-value="8">8</button>
-          <button class="key" data-action="digit" data-value="9">9</button>
-          <button class="key key--operator" data-action="operator" data-value="+">+</button>
+          <button data-action="number" data-value="7">7</button>
+          <button data-action="number" data-value="8">8</button>
+          <button data-action="number" data-value="9">9</button>
+          <button data-action="operator" data-value="*" class="operator">×</button>
 
-          <button class="key" data-action="digit" data-value="4">4</button>
-          <button class="key" data-action="digit" data-value="5">5</button>
-          <button class="key" data-action="digit" data-value="6">6</button>
-          <button class="key" data-action="equals" rowspan="2">=</button>
+          <button data-action="number" data-value="4">4</button>
+          <button data-action="number" data-value="5">5</button>
+          <button data-action="number" data-value="6">6</button>
+          <button data-action="operator" data-value="-" class="operator">−</button>
 
-          <button class="key" data-action="digit" data-value="1">1</button>
-          <button class="key" data-action="digit" data-value="2">2</button>
-          <button class="key" data-action="digit" data-value="3">3</button>
+          <button data-action="number" data-value="1">1</button>
+          <button data-action="number" data-value="2">2</button>
+          <button data-action="number" data-value="3">3</button>
+          <button data-action="operator" data-value="+" class="operator">+</button>
 
-          <button class="key key--zero" data-action="digit" data-value="0">0</button>
-          <button class="key" data-action="decimal">.</button>
+          <button data-action="number" data-value="0" class="span-2">0</button>
+          <button data-action="decimal" data-value=".">.</button>
+          <button data-action="equals" class="equals">=</button>
         </div>
-      </section>
+      </div>
     </main>
-
     <script src="script.js"></script>
   </body>
 </html>

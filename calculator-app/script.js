@@ -1,98 +1,87 @@
 const display = document.getElementById('display');
-const keys = document.querySelector('.keys');
 
 let current = '0';
 let previous = null;
 let operator = null;
-let resetCurrent = false;
+let resetNext = false;
 
-function render() {
+const render = () => {
   display.textContent = current;
-}
+};
 
-function clearAll() {
-  current = '0';
+const compute = () => {
+  const a = Number(previous);
+  const b = Number(current);
+  if (!Number.isFinite(a) || !Number.isFinite(b)) return;
+
+  let result;
+  switch (operator) {
+    case '+': result = a + b; break;
+    case '-': result = a - b; break;
+    case '*': result = a * b; break;
+    case '/': result = b === 0 ? 'Error' : a / b; break;
+    default: return;
+  }
+
+  current = result === 'Error' ? result : String(Number(result.toFixed(10)));
   previous = null;
   operator = null;
-  resetCurrent = false;
-  render();
-}
+  resetNext = true;
+};
 
-function inputDigit(digit) {
-  if (resetCurrent) {
-    current = digit;
-    resetCurrent = false;
-    return render();
-  }
+document.querySelector('.keys').addEventListener('click', (e) => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
 
-  current = current === '0' ? digit : current + digit;
-  render();
-}
+  const action = btn.dataset.action;
+  const value = btn.dataset.value;
 
-function inputDecimal() {
-  if (resetCurrent) {
-    current = '0';
-    resetCurrent = false;
-  }
-
-  if (!current.includes('.')) {
-    current += '.';
-    render();
-  }
-}
-
-function calculate(a, b, op) {
-  const x = parseFloat(a);
-  const y = parseFloat(b);
-
-  if (op === '+') return x + y;
-  if (op === '-') return x - y;
-  if (op === '*') return x * y;
-  if (op === '/') return y === 0 ? 'Error' : x / y;
-  return y;
-}
-
-function handleOperator(nextOperator) {
-  if (operator && !resetCurrent) {
-    const result = calculate(previous, current, operator);
-    current = result === 'Error' ? 'Error' : String(Number(result.toFixed(10)));
-    if (current === 'Error') {
-      previous = null;
-      operator = null;
-      resetCurrent = true;
-      return render();
+  if (action === 'number') {
+    if (current === '0' || resetNext || current === 'Error') {
+      current = value;
+      resetNext = false;
+    } else {
+      current += value;
     }
-    render();
   }
 
-  previous = current;
-  operator = nextOperator;
-  resetCurrent = true;
-}
+  if (action === 'decimal') {
+    if (resetNext || current === 'Error') {
+      current = '0.';
+      resetNext = false;
+    } else if (!current.includes('.')) {
+      current += '.';
+    }
+  }
 
-function handleEquals() {
-  if (!operator || previous === null) return;
+  if (action === 'operator') {
+    if (operator && !resetNext) compute();
+    previous = current;
+    operator = value;
+    resetNext = true;
+  }
 
-  const result = calculate(previous, current, operator);
-  current = result === 'Error' ? 'Error' : String(Number(result.toFixed(10)));
-  previous = null;
-  operator = null;
-  resetCurrent = true;
+  if (action === 'equals') {
+    if (operator) compute();
+  }
+
+  if (action === 'clear') {
+    current = '0';
+    previous = null;
+    operator = null;
+    resetNext = false;
+  }
+
+  if (action === 'delete') {
+    if (resetNext || current === 'Error') {
+      current = '0';
+      resetNext = false;
+    } else {
+      current = current.length > 1 ? current.slice(0, -1) : '0';
+    }
+  }
+
   render();
-}
-
-keys.addEventListener('click', (event) => {
-  const button = event.target.closest('button');
-  if (!button) return;
-
-  const action = button.dataset.action;
-  const value = button.dataset.value;
-
-  if (action === 'digit') return inputDigit(value);
-  if (action === 'decimal') return inputDecimal();
-  if (action === 'clear') return clearAll();
-  if (action === 'operator') return handleOperator(value);
-  if (action === 'equals') return handleEquals();
 });
 
-clearAll();
+render();
